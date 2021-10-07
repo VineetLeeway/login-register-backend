@@ -1,5 +1,5 @@
 const User = require("../model/userSchema");
-
+const jwt = require('jsonwebtoken')
 
 
 const register = async (req, res) => {
@@ -23,6 +23,7 @@ const register = async (req, res) => {
       name: user.fullname,
       email: user.email,
       phonenumber: user.phonenumber,
+      token: generateWebToken(user._id),
     });
   } else {
     res.status(400);
@@ -40,6 +41,7 @@ const login = async (req, res) => {
       name: user.name,
       email: user.email,
       phonenumber: user.phonenumber,
+      token: generateWebToken(user._id),
     });
   } else {
     res.status(400);
@@ -47,4 +49,12 @@ const login = async (req, res) => {
   }
 };
 
+
+const generateToken = (id) =>{
+    return jwt.sign({id}, process.env.JWT_SECRET,{
+        expiresIn:'5m'
+    })
+    
+}
+module.exports = generateToken;
 module.exports = { register, login };
